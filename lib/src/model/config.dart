@@ -2,22 +2,19 @@ import 'dart:convert';
 
 // modelo para configuração da primavera webapi no servidor
 class ConfigWebapi {
-  final String baseUrl;
   final String company;
   final String instance;
   final String grantType;
   final String line;
 
   ConfigWebapi(
-      {required this.baseUrl,
-      required this.company,
-      required this.instance,
+      {required this.company,
+      this.instance = 'default',
       required this.grantType,
       required this.line});
 
   String toJson() {
     return jsonEncode({
-      'baseUrl': baseUrl,
       'company': company,
       'instance': instance,
       'grant_type': grantType,
@@ -61,4 +58,16 @@ class ConfigSessao {
       {required this.accessToken,
       required this.tokenType,
       required this.expireIn});
+}
+
+class ConfigServidor {
+  final String ip;
+  final int porta;
+
+  ConfigServidor(this.ip, this.porta);
+
+  @override
+  String toString() {
+    return '$ip:$porta';
+  }
 }
