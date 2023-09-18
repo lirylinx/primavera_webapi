@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:primavera_webapi/src/model/config.dart';
+import 'package:primavera_webapi/src/model/encomenda.dart';
 import 'package:primavera_webapi/src/model/utilizador.dart';
 import 'package:primavera_webapi/src/utils/app_endpoint.dart';
 
@@ -25,7 +26,7 @@ class Fetch {
   //_______________________________Set Header__________________________________________
   // Cabeçalho necessário para todas request feitas a webapi
   Map<String, String> setHeader(String token) => {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       };
@@ -104,6 +105,25 @@ class Fetch {
     return _listaCliente;
   }
 
-  //_______________________________GetListaCliente__________________________________________
-  // Busca pela lista de clientes
+  //_______________________________CriarEncomenda__________________________________________
+  // Criar encomenda indicando o cliente, documento e os artigos
+
+  Future<void> criarEncomenda(String token, String tipodoc, int serie,
+      String cliente, String referencia, List<Artigo> listaArtigos) async {
+    var url = Uri.http(servidor.toString(), AppEndpoint.CRIAR_ENCOMENDA);
+
+    Encomenda encomenda = Encomenda(
+        tipodoc: tipodoc,
+        serie: serie,
+        cliente: cliente,
+        vendedor: 'jmr',
+        artigos: listaArtigos);
+
+    print(encomenda.toJson());
+
+    var response = await http.post(url,
+        headers: setHeader(token), body: jsonEncode(encomenda.toJson()));
+
+    print(response);
+  }
 }
