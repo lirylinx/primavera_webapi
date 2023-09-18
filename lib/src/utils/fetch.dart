@@ -22,12 +22,17 @@ class Fetch {
 
   Fetch();
 
+  //_______________________________Set Header__________________________________________
+  // Cabeçalho necessário para todas request feitas a webapi
   Map<String, String> setHeader(String token) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       };
 
+  //_______________________________GetToken__________________________________________
+  // Request necessária para autenticação de todos outros requests
+  // feitas ao servidor usando dado de utilizador e configuração
   Future<ConfigTokenSessao> getToken() async {
     var url = Uri.http(servidor.toString(), AppEndpoint.TOKEN);
     Map<String, dynamic> data = webapi.toJson();
@@ -41,7 +46,9 @@ class Fetch {
     return ConfigTokenSessao.fromJson(body);
   }
 
-  Future<List<Artigo>> getListaArtigo(String token) async {
+  //_______________________________GetListaArtigo__________________________________________
+  // Busca pela lista de artigos
+  Future<List<Artigo>> listaArtigo(String token) async {
     var url = Uri.http(servidor.toString(), AppEndpoint.LISTA_ARTIGO);
 
     var response = await http.get(url, headers: setHeader(token));
@@ -59,7 +66,7 @@ class Fetch {
     } else if (response.statusCode == 401) {
       // renovar o token apos expirar
       ConfigTokenSessao tokenSessao = await getToken();
-      _listaArtigos = await getListaArtigo(tokenSessao.accessToken);
+      _listaArtigos = await listaArtigo(tokenSessao.accessToken);
     } else {
       _listaArtigos = [];
     }
@@ -67,12 +74,14 @@ class Fetch {
     return _listaArtigos;
   }
 
-  Future<List<Cliente>> getListaCliente(String token) async {
+  //_______________________________GetListaCliente__________________________________________
+  // Busca pela lista de clientes
+  Future<List<Cliente>> listaCliente(String token) async {
     var url = Uri.http(servidor.toString(), AppEndpoint.LISTA_CLIENTE);
 
     var response = await http.get(url, headers: setHeader(token));
 
-    List<Cliente> listaCliente = [];
+    List<Cliente> _listaCliente = [];
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -80,18 +89,21 @@ class Fetch {
 
       for (dynamic rawCliente in data) {
         Cliente _cliente = Cliente.fromJson(rawCliente);
-        listaCliente.add(_cliente);
+        _listaCliente.add(_cliente);
       }
 
-      print(listaCliente);
+      print(_listaCliente);
     } else if (response.statusCode == 401) {
       // renovar o token apos expirar
       ConfigTokenSessao tokenSessao = await getToken();
-      getListaCliente(tokenSessao.accessToken);
+      _listaCliente = await listaCliente(tokenSessao.accessToken);
     } else {
-      listaCliente = [];
+      _listaCliente = [];
     }
 
-    return listaCliente;
+    return _listaCliente;
   }
+
+  //_______________________________GetListaCliente__________________________________________
+  // Busca pela lista de clientes
 }
