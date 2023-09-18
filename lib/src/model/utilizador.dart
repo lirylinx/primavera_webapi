@@ -4,7 +4,7 @@ class Utilizador {
   final String username;
   final String password;
 
-  Utilizador({required this.username, required this.password});
+  Utilizador({required this.username, this.password = ""});
 
   Map<String, dynamic> toJson() => {
         'username': username,
