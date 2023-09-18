@@ -126,4 +126,31 @@ class Fetch {
 
     print(response);
   }
+
+  //_______________________________POS CAIXA__________________________________________
+  //_______________________________Abertura__________________________________________
+  // Abrir o caixa POS, indicando o saldo, conta e o utilizador
+  Future<void> abrirPosCaixa(String token) async {
+    var url = Uri.http(servidor.toString(), AppEndpoint.ABRIR_POS_CAIXA);
+
+    var response = await http.post(url,
+        headers: setHeader(token),
+        body: jsonEncode({
+          "diariocaixa": {"saldo": "1500", "conta": "CXM1", "utilizador": "jmr"}
+        }));
+
+    print(response);
+  }
+
+  //_______________________________Fechamento__________________________________________
+  // Fechar o caixa POS
+  Future<void> fecharPosCaixa(String token, String caixaPosto) async {
+    var url = Uri.http(servidor.toString(), AppEndpoint.FECHAR_POS_CAIXA);
+
+    var response = await http.post(url,
+        headers: setHeader(token),
+        body: jsonEncode({"caixaPosto": caixaPosto}));
+
+    print(response);
+  }
 }
