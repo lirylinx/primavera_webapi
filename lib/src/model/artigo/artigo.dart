@@ -107,14 +107,14 @@ class Artigo extends Equatable {
       pvp4Iva: true,
       pvp5: data['pvp5'],
       pvp5Iva: true,
-      pvp6: data['pvp6'],
+      pvp6: data['pvp6'] ?? 0,
       pvp6Iva: true,
       imagemBuffer: Uint8List(0),
       codigoBarra: data['codigoBarra'] ?? "",
       artigoArmazem: [],
       imagemBufferStr: '',
     );
-    List armazens = data['artigoArmazem'];
+    List armazens = data['artigoArmazem'] ?? [];
     if (armazens.isNotEmpty) {
       for (var element in armazens) {
         ArtigoArmazem armazem = ArtigoArmazem.fromJson(element);
