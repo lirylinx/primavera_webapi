@@ -46,7 +46,7 @@ class Fetch {
 
     var response = await http.get(url, headers: setHeader(token));
 
-    List<Artigo> _artigos = [];
+    List<Artigo> _listaArtigos = [];
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -54,17 +54,17 @@ class Fetch {
 
       for (dynamic rawArtigo in data) {
         Artigo artigo = Artigo.fromJson(rawArtigo);
-        _artigos.add(artigo);
+        _listaArtigos.add(artigo);
       }
     } else if (response.statusCode == 401) {
       // renovar o token apos expirar
       ConfigTokenSessao tokenSessao = await getToken();
-      getListaArtigo(tokenSessao.accessToken);
+      _listaArtigos = await getListaArtigo(tokenSessao.accessToken);
     } else {
-      _artigos = [];
+      _listaArtigos = [];
     }
 
-    return _artigos;
+    return _listaArtigos;
   }
 
   Future<List<Cliente>> getListaCliente(String token) async {
