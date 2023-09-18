@@ -22,6 +22,12 @@ class Fetch {
 
   Fetch();
 
+  Map<String, String> setHeader(String token) => {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
   Future<ConfigTokenSessao> getToken() async {
     var url = Uri.http(servidor.toString(), AppEndpoint.TOKEN);
     Map<String, dynamic> data = webapi.toJson();
@@ -38,11 +44,7 @@ class Fetch {
   Future<List<Artigo>> getListaArtigo(String token) async {
     var url = Uri.http(servidor.toString(), AppEndpoint.LISTA_ARTIGO);
 
-    var response = await http.get(url, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
+    var response = await http.get(url, headers: setHeader(token));
 
     List<Artigo> _artigos = [];
 
@@ -68,11 +70,7 @@ class Fetch {
   Future<List<Cliente>> getListaCliente(String token) async {
     var url = Uri.http(servidor.toString(), AppEndpoint.LISTA_CLIENTE);
 
-    var response = await http.get(url, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    });
+    var response = await http.get(url, headers: setHeader(token));
 
     List<Cliente> listaCliente = [];
 
