@@ -4,12 +4,17 @@ class Endereco {
   String ruaAv;
   String bairro;
   String descricao;
-  Endereco(
-      {this.pais = "",
-      this.provincia = "",
-      this.ruaAv = "",
-      this.bairro = "",
-      this.descricao = ""});
+  String? latitude;
+  String? longitude;
+  Endereco({
+    this.pais = "",
+    this.provincia = "",
+    this.ruaAv = "",
+    this.bairro = "",
+    this.descricao = "",
+    this.latitude = "",
+    this.longitude = "",
+  });
 
   Map<String, dynamic> toJson() => {
         'pais': pais,
@@ -17,6 +22,8 @@ class Endereco {
         'ruaAv': ruaAv,
         'bairro': bairro,
         'decricao': descricao,
+        'latitude': latitude,
+        'longitude': longitude,
       };
 
   factory Endereco.fromJson(Map<String, dynamic> json) => Endereco(
@@ -25,5 +32,7 @@ class Endereco {
         pais: json['pais'],
         provincia: json['provincia'],
         ruaAv: json['ruaAv'],
+        latitude: json['latitude'],
+        longitude: json['longitude'],
       );
 }
