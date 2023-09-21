@@ -153,4 +153,26 @@ class Fetch {
 
     print(response);
   }
+
+  //_______________________________CriarVenda__________________________________________
+  // Criar POS venda indicando o cliente, documento e os artigos
+
+  Future<void> criarVenda(String token, String tipodoc, int serie,
+      String cliente, String referencia, List<Artigo> listaArtigos) async {
+    var url = Uri.http(servidor.toString(), AppEndpoint.CRIAR_ENCOMENDA);
+
+    Encomenda encomenda = Encomenda(
+        tipodoc: tipodoc,
+        serie: serie,
+        cliente: cliente,
+        vendedor: 'jmr',
+        artigos: listaArtigos);
+
+    print(encomenda.toJson());
+
+    var response = await http.post(url,
+        headers: setHeader(token), body: jsonEncode(encomenda.toJson()));
+
+    print(response);
+  }
 }
