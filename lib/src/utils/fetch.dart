@@ -10,8 +10,7 @@ import '../model/artigo/artigo.dart';
 import '../model/cliente.dart';
 
 class Fetch {
-  final Utilizador utilizador =
-      Utilizador(username: 'jmr', password: 'jmr2013!');
+  final Utilizador utilizador;
   final ConfigServidor servidor = ConfigServidor('165.90.83.186', 2018);
   final ConfigWebapi webapi = ConfigWebapi(
       company: 'terramar',
@@ -21,7 +20,7 @@ class Fetch {
 
   ConfigTokenSessao? tokenSessao;
 
-  Fetch();
+  Fetch({required this.utilizador});
 
   //_______________________________Set Header__________________________________________
   // Cabeçalho necessário para todas request feitas a webapi
@@ -34,17 +33,22 @@ class Fetch {
   //_______________________________GetToken__________________________________________
   // Request necessária para autenticação de todos outros requests
   // feitas ao servidor usando dado de utilizador e configuração
-  Future<ConfigTokenSessao> getToken() async {
+  Future<ConfigTokenSessao?> getToken() async {
     var url = Uri.http(servidor.toString(), AppEndpoint.TOKEN);
     Map<String, dynamic> data = webapi.toJson();
     data.addAll(utilizador.toJson());
 
     var response = await http.post(url, body: data);
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
 
-    Map<String, dynamic> body = jsonDecode(response.body);
-    return ConfigTokenSessao.fromJson(body);
+    if (response.statusCode == 200) {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      Map<String, dynamic> body = jsonDecode(response.body);
+      return ConfigTokenSessao.fromJson(body);
+    }
+
+    return null;
   }
 
   //_______________________________GetListaArtigo__________________________________________
@@ -66,8 +70,9 @@ class Fetch {
       }
     } else if (response.statusCode == 401) {
       // renovar o token apos expirar
-      ConfigTokenSessao tokenSessao = await getToken();
-      _listaArtigos = await listaArtigo(tokenSessao.accessToken);
+      ConfigTokenSessao? tokenSessao = await getToken();
+
+      _listaArtigos = await listaArtigo(tokenSessao!.accessToken);
     } else {
       _listaArtigos = [];
     }
@@ -96,8 +101,8 @@ class Fetch {
       print(_listaCliente);
     } else if (response.statusCode == 401) {
       // renovar o token apos expirar
-      ConfigTokenSessao tokenSessao = await getToken();
-      _listaCliente = await listaCliente(tokenSessao.accessToken);
+      ConfigTokenSessao? tokenSessao = await getToken();
+      _listaCliente = await listaCliente(tokenSessao!.accessToken);
     } else {
       _listaCliente = [];
     }
